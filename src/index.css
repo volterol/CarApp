@@ -1,16 +1,25 @@
 body {
   margin: 0;
-  font-family: "Courier New", sans-serif;
-  background: linear-gradient(89deg, #FF5EDF 0%, #04C8DE 100%);
+  font-family: proxima-nova, sans-serif;
+  background-color: #fffffe;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  color: #5f6c7b;
 }
 
 button {
   cursor: pointer;
+}
+
+.link {
+  cursor: pointer;
+}
+
+.link:hover {
+  color: #3b444e;
+}
+
+.form-btn {
+  background-color: #3da9fc;
+  color: #fffffe;
 }

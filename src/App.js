@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import Navigation from './components/Navigation/Navigation';
+import Header from './components/Header/Header';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
-import Logo from './components/Logo/Logo';
+import Sidebar from './components/Sidebar/Sidebar';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
-import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import NumRecognition from './components/NumRecognition/NumRecognition';
 import './App.css';
 
 
@@ -13,16 +13,17 @@ import './App.css';
 const initialState = {
   input: '',
   imageUrl: '',
-  box: {},
+  box: [],
   route: 'signin',
   isSignedIn: false,
   user: {
     id: '',
     name: '',
     email: '',
-    entries: 0,
     joined: ''
-  }
+  },
+  isNumLoaded: false,
+  num: '',
 }
 
 class App extends Component {
@@ -36,26 +37,70 @@ class App extends Component {
       id: data.id,
       name: data.name,
       email: data.email,
-      entries: data.entries,
       joined: data.joined
     }})
   }
 
-  calculateFaceLocation = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+  calculateBorders = (data) => {
+    const clarifai = data;
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
     const height = Number(image.height);
     return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height)
+      leftCol: clarifai.left_col * width,
+      topRow: clarifai.top_row * height,
+      rightCol: width - (clarifai.right_col * width),
+      bottomRow: height - (clarifai.bottom_row * height)
     }
   }
 
-  displayFaceBox = (box) => {
+  displayBox = (box) => {
     this.setState({box: box});
+  }
+
+  filterNums = (data) => {
+    console.log(data);
+    let filtered_arr = [];
+    let strings_arr = [];
+    let x = 0;
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    const numbers = '1234567890';
+    Object.values(data.ocrSceneEnglish.outputs[0].data.regions).forEach((i) => {
+      let numString = i.data.text.raw;
+      if (numString.length >= 5 
+        && numString.length <= 7 
+        && numbers.includes(numString.charAt(0)) 
+        && numbers.includes(numString.charAt(1))
+        && alphabet.includes(numString.charAt(-1).toLowerCase())
+        && alphabet.includes(numString.charAt(-2).toLowerCase())) {
+          filtered_arr.push(x);
+          strings_arr.push(numString)
+        } 
+        x++;
+    });
+    return { filtered_arr, strings_arr }
+  }
+
+  outputNumPlate = (data) => {
+    const arr1 = this.filterNums(data).filtered_arr;
+    const plateNumbers = [];
+
+    // Loop through each filtered region
+    arr1.forEach(i => {
+        let numPlate = data.ocrSceneEnglish.outputs[0].data.regions[i].data.text.raw;
+        
+        // Remove spaces within a recognized plate number
+        numPlate = numPlate.replace(/\s+/g, '');
+
+        // Add the cleaned plate number to the array
+        plateNumbers.push(numPlate);
+    });
+
+    return plateNumbers;
+  }
+
+  loadNum = (num) => {
+    this.setState({num: num});
   }
 
   onInputChange = (event) => {
@@ -63,7 +108,12 @@ class App extends Component {
   }
 
   onButtonSubmit = () => {
-    this.setState({imageUrl: this.state.input});
+    if (this.state.input.trim() === '') {
+      // Check if the input is empty
+      return;
+    }
+
+    this.setState({box: [], imageUrl: this.state.input, isNumLoaded: true, num: '' });
     fetch('http://localhost:3000/imageurl', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
@@ -73,27 +123,13 @@ class App extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        this.displayFaceBox(this.calculateFaceLocation(data))
-        if (data) {
-          fetch('http://localhost:3000/image', {
-            method: 'put',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              id: this.state.user.id
-            })
-          })
-            .then(response => response.json())
-            .then(count => {
-              this.setState(Object.assign(this.state.user, { entries: count }))
-            })
-            .catch(console.log)
-
-        }
-      })
+        const numLocations = this.filterNums(data).filtered_arr.map((i) => data.ocrSceneEnglish.outputs[0].data.regions[i].region_info.bounding_box);
+        const numLocationLines = numLocations.map(location => this.calculateBorders(location));
+        this.displayBox(numLocationLines);
+        this.loadNum(this.outputNumPlate(data));
+        })
       .catch(error => console.log('error', error));
   }
-
-  
 
   onRouteChange = (route) => {
     if (route === 'signout') {
@@ -105,22 +141,23 @@ class App extends Component {
   }
 
   render() {
-    const { isSignedIn, imageUrl, route, box } = this.state;
+    const { isSignedIn, imageUrl, route, box, num, isNumLoaded } = this.state;
     return (
       <div className="App">
-        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} />
+        <Header 
+        isSignedIn={isSignedIn} 
+        onRouteChange={this.onRouteChange} 
+        name={this.state.user.name} 
+        />
+        <Sidebar />
         { route === 'home'
           ? <div>
-              <Logo />
-              <Rank
-                name={this.state.user.name}
-                entries={this.state.user.entries}
-              />
               <ImageLinkForm
                 onInputChange={this.onInputChange}
                 onButtonSubmit={this.onButtonSubmit}
               />
-              <FaceRecognition box={box} imageUrl={imageUrl} />
+              <NumRecognition box={box} imageUrl={imageUrl} />
+              <Rank name={this.state.user.name} num={num} isNumLoaded={isNumLoaded} />
             </div>
           : (
              route === 'signin'
