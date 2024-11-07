@@ -28,11 +28,20 @@ const app = express();
 const port = 3000;
 const saltRounds = 10;
 
-app.use(express.json());
+const allowedOrigins = ['https://carpp.online', 'http://localhost:3000'];
+
 app.use(cors({
-  origin: 'https://carpp.online',
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: 'GET,POST,PUT,DELETE'
 }));
+
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
