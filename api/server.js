@@ -40,12 +40,12 @@ app.use(bodyParser.urlencoded({
 }));
 app.options('*', cors());
 
-app.get('/api', (req, res) => res.send('success'))
-app.post('/api/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) });
-app.post('/api/register', (req, res) => { register.handleRegister(req, res, db, bcrypt, saltRounds) });
-app.get('/api/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db) });
-app.put('/api/image', (req, res) => { image.handleImage(req, res, db) });
-app.post('/api/imageurl', (req, res) => { image.handleApiCall(req, res) });
+app.get('/', (req, res) => res.send('success'))
+app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) });
+app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt, saltRounds) });
+app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db) });
+app.put('/image', (req, res) => { image.handleImage(req, res, db) });
+app.post('/imageurl', (req, res) => { image.handleApiCall(req, res) });
 
 app.listen(port, () => {
   console.log(`Server app listening on port ${port}`)

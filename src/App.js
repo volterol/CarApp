@@ -114,7 +114,7 @@ class App extends Component {
     }
 
     this.setState({box: [], imageUrl: this.state.input, isNumLoaded: true, num: '' });
-    fetch('/api/imageurl', {
+    fetch('http://localhost:3000/imageurl', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
