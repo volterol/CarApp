@@ -38,6 +38,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.options('*', cors());
 
 app.get('/api', (req, res) => res.send('success'))
 app.post('/api/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) });
