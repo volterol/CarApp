@@ -28,17 +28,34 @@ const app = express();
 const port = 3000;
 const saltRounds = 10;
 
-app.use(cors({
-  origin: 'https://carpp.online', 
-  methods: 'GET, POST, PUT, DELETE, OPTIONS',
-  allowedHeaders: 'Content-Type, Authorization'
-}));
+const whitelist = ["http://localhost:3000"]
+
+const corsOptions = {
+
+  origin: function (origin, callback) {
+
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+
+      callback(null, true)
+
+    } else {
+
+      callback(new Error("Not allowed by CORS"))
+
+    }
+
+  },
+
+  credentials: true,
+
+}
+
+app.use(cors(corsOptions))
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-app.options('*', cors());
 
 app.get('/', (req, res) => res.send('success'))
 app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) });
