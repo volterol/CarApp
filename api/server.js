@@ -25,39 +25,27 @@ const db = knex({
 
 const app = express();
 
+const https = require('https');
+const fs = require('fs');
+
+const options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/carpp.online/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/carpp.online/fullchain.pem')
+};
+
+
 const port = 3000;
 const saltRounds = 10;
 
-const whitelist = ["http://localhost:3000"]
 
-const corsOptions = {
-
-  origin: function (origin, callback) {
-
-    if (!origin || whitelist.indexOf(origin) !== -1) {
-
-      callback(null, true)
-
-    } else {
-
-      callback(new Error("Not allowed by CORS"))
-
-    }
-
-  },
-
-  credentials: true,
-
-}
-
-app.use(cors(corsOptions))
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.get('/', (req, res) => res.send('success'))
+app.get('/', (req, res) => res.send('connected via https'))
 app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) });
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt, saltRounds) });
 app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db) });
