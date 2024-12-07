@@ -29,8 +29,8 @@ const port = 3000;
 const saltRounds = 10;
 
 app.use(cors({
-  origin: "*", 
-  allowMethods: "*",
+  origin: "https://carpp.online", 
+  methods: "*",
   allowedHeaders: "*"
 }));
 
@@ -43,6 +43,8 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.options('*', cors())
 
 app.use(express.json());
 app.use(bodyParser.json());
