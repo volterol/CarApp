@@ -5,6 +5,14 @@ const cors = require('cors');
 const knex = require('knex');
 require('dotenv').config();
 
+app.use(cors({
+  origin: 'https://carpp.online', 
+  methods: 'GET, POST, PUT, DELETE, OPTIONS',
+  allowedHeaders: 'Content-Type, Authorization'
+}));
+app.options('*', cors());
+
+
 const register = require('./controllers/register');
 const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
@@ -25,27 +33,19 @@ const db = knex({
 
 const app = express();
 
-const https = require('https');
-const fs = require('fs');
-
-const options = {
-  key: fs.readFileSync('/etc/letsencrypt/live/carpp.online/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/carpp.online/fullchain.pem')
-};
-
-
 const port = 3000;
 const saltRounds = 10;
 
 
-app.use(cors());
+
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.get('/', (req, res) => res.send('connected via https'))
+
+app.get('/', (req, res) => res.send('success'))
 app.post('/signin', (req, res) => { signin.handleSignin(req, res, db, bcrypt) });
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt, saltRounds) });
 app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db) });
