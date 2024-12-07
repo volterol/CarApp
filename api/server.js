@@ -5,11 +5,19 @@ const cors = require('cors');
 const knex = require('knex');
 require('dotenv').config();
 
+const https = require('https');
+const fs = require('fs');
+
 const register = require('./controllers/register');
 const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
 const image = require('./controllers/image');
 
+// SSL certificate files
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/carpp.online/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/carpp.online/fullchain.pem', 'utf8');
+
+const credentials = { key: privateKey, cert: certificate };
 
 const db = knex({
     client: 'pg',
@@ -31,7 +39,8 @@ const saltRounds = 10;
 app.use(cors({
   origin: "https://carpp.online", 
   methods: "*",
-  allowedHeaders: "*"
+  allowedHeaders: "*",
+  credentials: true
 }));
 
 app.use((req, res, next) => {
@@ -60,8 +69,8 @@ app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db) }
 app.put('/image', (req, res) => { image.handleImage(req, res, db) });
 app.post('/imageurl', (req, res) => { image.handleApiCall(req, res) });
 
-app.listen(port, () => {
-  console.log(`Server app listening on port ${port}`)
-})
+https.createServer(credentials, app).listen(port, () => {
+  console.log(`Server app listening on https://carpp.online:${port}`)
+});
 
 console.error
