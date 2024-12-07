@@ -29,11 +29,10 @@ const port = 3000;
 const saltRounds = 10;
 
 app.use(cors({
-  origin: 'https://carpp.online', 
-  methods: 'GET, POST, PUT, DELETE, OPTIONS',
-  allowedHeaders: 'Content-Type, Authorization'
+  origin: "*", 
+  allowMethods: "*",
+  allowedHeaders: "*"
 }));
-app.options('*', cors());
 
 app.use(express.json());
 app.use(bodyParser.json());
