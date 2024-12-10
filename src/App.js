@@ -31,6 +31,30 @@ class App extends Component {
     super();
     this.state = initialState;
   }
+
+  onButtonSubmit = () => {
+    if (this.state.input.trim() === '') {
+      // Check if the input is empty
+      return;
+    }
+
+    this.setState({box: [], imageUrl: this.state.input, isNumLoaded: true, num: '' });
+    fetch('https://carpp.online:3000/imageurl', {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        input: this.state.input
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        const numLocations = this.filterNums(data).filtered_arr.map((i) => data.ocrSceneEnglish.outputs[0].data.regions[i].region_info.bounding_box);
+        const numLocationLines = numLocations.map(location => this.calculateBorders(location));
+        this.displayBox(numLocationLines);
+        this.loadNum(this.outputNumPlate(data));
+        })
+      .catch(error => console.log('error', error));
+  }
   
   loadUser = (data) => {
     this.setState({user: {
@@ -105,30 +129,6 @@ class App extends Component {
 
   onInputChange = (event) => {
     this.setState({input: event.target.value});
-  }
-
-  onButtonSubmit = () => {
-    if (this.state.input.trim() === '') {
-      // Check if the input is empty
-      return;
-    }
-
-    this.setState({box: [], imageUrl: this.state.input, isNumLoaded: true, num: '' });
-    fetch('https://carpp.online:3000/imageurl', {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        input: this.state.input
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        const numLocations = this.filterNums(data).filtered_arr.map((i) => data.ocrSceneEnglish.outputs[0].data.regions[i].region_info.bounding_box);
-        const numLocationLines = numLocations.map(location => this.calculateBorders(location));
-        this.displayBox(numLocationLines);
-        this.loadNum(this.outputNumPlate(data));
-        })
-      .catch(error => console.log('error', error));
   }
 
   onRouteChange = (route) => {
