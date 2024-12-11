@@ -33,8 +33,9 @@ class App extends Component {
   }
 
   onButtonSubmit = () => {
+
     if (this.state.input.trim() === '') {
-      // Check if the input is empty
+      alert('Please provide a valid image URL.');
       return;
     }
 
@@ -46,14 +47,22 @@ class App extends Component {
         input: this.state.input
       })
     })
-      .then(response => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch image.');
+        }
+        return response.json();
+      })
       .then(data => {
         const numLocations = this.filterNums(data).filtered_arr.map((i) => data.ocrSceneEnglish.outputs[0].data.regions[i].region_info.bounding_box);
         const numLocationLines = numLocations.map(location => this.calculateBorders(location));
         this.displayBox(numLocationLines);
         this.loadNum(this.outputNumPlate(data));
         })
-      .catch(error => console.log('error', error));
+      .catch(error => {
+        console.log('error', error);
+        alert('Error processing the image. Please try again.');
+      });
   }
   
   loadUser = (data) => {
