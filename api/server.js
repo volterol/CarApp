@@ -13,6 +13,10 @@ const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
 const image = require('./controllers/image');
 
+// periodic pings to clarifai api to keep it warm
+const startPeriodicPings = require('./periodicPings');
+startPeriodicPings();
+
 // SSL certificate files
 const privateKey = fs.readFileSync('/etc/letsencrypt/live/carpp.online/privkey.pem', 'utf8');
 const certificate = fs.readFileSync('/etc/letsencrypt/live/carpp.online/fullchain.pem', 'utf8');
@@ -60,6 +64,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+
 
 
 app.get('/', (req, res) => res.send('success'))

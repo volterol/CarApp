@@ -2,14 +2,9 @@ require('dotenv').config();
 
 const handleApiCall = (req, res) => {
     const returnClarifaiRequestOptions = () => {
-        
-        // Your PAT (Personal Access Token) can be found in the portal under Authentification
         const PAT = process.env.myPAT;
-        // Specify the correct user_id/app_id pairings
-        // Since you're making inferences outside your app's scope
         const USER_ID = process.env.myUSER_ID;       
         const APP_ID = process.env.myAPP_ID;
-        // Change these to whatever model and image URL you want to use
         const IMAGE_URL = req.body.input;
       
         const raw = JSON.stringify({
