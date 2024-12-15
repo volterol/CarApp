@@ -6,7 +6,6 @@ import Sidebar from './components/Sidebar/Sidebar';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import NumRecognition from './components/NumRecognition/NumRecognition';
-import './App.css';
 
 
 
