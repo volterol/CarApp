@@ -6,7 +6,7 @@ const Header = ({ onRouteChange, isSignedIn, name }) => {
   return (
       <header className="flex justify-between items-center w-full font-sans text-lg bg-white shadow-md p-4">
           <div className="flex-grow flex justify-start items-center">
-              <Logo src={Logo} alt="logo" width={150} height={50} />
+              <img src={Logo} alt="logo" width={150} height={50} />
           </div>
           <div className="flex-grow-[2]"></div>
           <div className="flex-grow">
