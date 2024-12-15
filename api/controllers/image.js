@@ -40,6 +40,7 @@ const handleApiCall = (req, res) => {
     const fetchPersonVehicleDetection = () => {
         return fetch("https://api.clarifai.com/v2/models/person-detection-efficientdet-lite/versions/b71b4b4e28214100906f2ad6933e1726/outputs", returnClarifaiRequestOptions())
             .then(response => {
+                console.log(response);
                 if (!response.ok) {
                     throw new Error('Person Vehicle Detection API call failed');
                 }
@@ -56,6 +57,7 @@ const handleApiCall = (req, res) => {
         const fetchOCRSceneEnglish = () => {
             return fetch("https://api.clarifai.com/v2/models/ocr-scene-english-paddleocr/versions/40dbb2c9cde44a27af226782e7157006/outputs", returnClarifaiRequestOptions())
                 .then(response => {
+                    console.log(response);
                     if (!response.ok) {
                         throw new Error('OCR Scene English API call failed');
                     }
