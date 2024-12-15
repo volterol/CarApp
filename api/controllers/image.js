@@ -44,13 +44,17 @@ const handleApiCall = (req, res) => {
                 if (!response.ok) {
                     throw new Error('Person Vehicle Detection API call failed');
                 }
-                response.json();
+                return response.json();
             })
             .then(data => {
                 if (!data?.outputs || data.outputs.length === 0) {
                     throw new Error('Person Vehicle Detection returned no outputs');
                 }
                 return data;
+            })
+            .catch(error => {
+                console.error('Error in Person Vehicle Detection:', error);
+                throw error;  
             });
         };
 
@@ -68,6 +72,10 @@ const handleApiCall = (req, res) => {
                         throw new Error('OCR Scene English returned no outputs');
                     }
                     return data;
+                })
+                .catch(error => {
+                    console.error('Error in OCR Scene English:', error);
+                    throw error;  
                 });
         };
 
