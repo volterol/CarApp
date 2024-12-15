@@ -1,12 +1,12 @@
 import React from "react";
-import logo from './carbook-logo-resized.png';
+import Logo from './carbook-logo-resized.png';
 import './Header.css';
 
 const Header = ({ onRouteChange, isSignedIn, name }) => {
   return (
       <header className="flex justify-between items-center w-full font-sans text-lg bg-white shadow-md p-4">
           <div className="flex-grow flex justify-start items-center">
-              <Image src={logo} alt="logo" width={150} height={50} />
+              <Logo src={Logo} alt="logo" width={150} height={50} />
           </div>
           <div className="flex-grow-[2]"></div>
           <div className="flex-grow">
