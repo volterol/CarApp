@@ -14,8 +14,8 @@ const profile = require('./controllers/profile');
 const image = require('./controllers/image');
 
 // periodic pings to clarifai api to keep it warm
-const startPeriodicPings = require('./periodicPings');
-startPeriodicPings();
+// const startPeriodicPings = require('./periodicPings');
+// startPeriodicPings();
 
 // SSL certificate files
 const privateKey = fs.readFileSync('/etc/letsencrypt/live/carpp.online/privkey.pem', 'utf8');
@@ -41,10 +41,10 @@ const port = 3000;
 const saltRounds = 10;
 
 app.use(cors({
-  origin: "https://carpp.online", 
+  origin: ["https://carpp.online", "http://localhost:3001"], 
   methods: "*",
   allowedHeaders: "*",
-  credentials: true
+  //credentials: true
 }));
 
 app.use((req, res, next) => {

@@ -151,7 +151,7 @@ class App extends Component {
   render() {
     const { isSignedIn, imageUrl, route, box, num, isNumLoaded } = this.state;
     return (
-      <div className="App">
+      <div className="max-w-[1024px] mx-auto px-4 font-sans">
         <Header 
         isSignedIn={isSignedIn} 
         onRouteChange={this.onRouteChange} 

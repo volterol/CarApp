@@ -2,28 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --text--primary: #000;
+}
+
 body {
+  color: var(--text--primary);
   margin: 0;
-  font-family: proxima-nova, sans-serif;
-  background-color: #fffffe;
+  background-color: #f9f8f1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #5f6c7b;
-}
-
-button {
-  cursor: pointer;
-}
-
-.link {
-  cursor: pointer;
-}
-
-.link:hover {
-  color: #3b444e;
-}
-
-.form-btn {
-  background-color: #3da9fc;
-  color: #fffffe;
 }

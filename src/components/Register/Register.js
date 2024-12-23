@@ -43,53 +43,58 @@ class Register extends React.Component {
 
   render() {
     return (
-      <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
-        <main className="pa4 black-80">
-          <div className="measure">
-            <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-              <legend className="f1 fw6 ph0 mh0 center">Register</legend>
-              <div className="mt3">
-                <label className="db fw6 lh-copy f6" htmlFor="name">Name</label>
-                <input
-                  className="pa2 input-reset ba bg-transparent w-100"
-                  type="text"
-                  name="name"
-                  id="name"
-                  onChange={this.onNameChange}
-                />
-              </div>
-              <div className="mt3">
-                <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
-                <input
-                  className="pa2 input-reset ba bg-transparent w-100"
-                  type="email"
-                  name="email-address"
-                  id="email-address"
-                  onChange={this.onEmailChange}
-                />
-              </div>
-              <div className="mv3">
-                <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
-                <input
-                  className="b pa2 input-reset ba bg-transparent w-100"
-                  type="password"
-                  name="password"
-                  id="password"
-                  onChange={this.onPasswordChange}
-                />
-              </div>
-            </fieldset>
-            <div className="">
-              <input
-                onClick={this.onSubmitSignIn}
-                className="b ph3 pv2 input-reset ba grow pointer f6 dib form-btn"
-                type="submit"
-                value="Register"
-              />
-            </div>
-          </div>
-        </main>
-      </article>
+      <div className="max-w-sm mx-auto mt-8">
+      <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h2 className="text-2xl mb-6 text-center font-bold leading-tight">Register</h2>
+        <div className="mb-4">
+        <label className="block text-sm font-semibold leading-5 mb-2" htmlFor="name">
+            Your Name
+          </label>
+          <input
+            className="appearance-none border box-border border-gray-200 hover:border-gray-300 focus:border-emerald-700 focus:ring-emerald-700 focus:ring-1 rounded w-full py-2 px-3 leading-tight focus:outline-none"
+            type="text"
+            name="ename"
+            id="name"
+            onChange={this.onNameChange}
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-sm font-semibold leading-5 mb-2" htmlFor="password">
+            Email
+          </label>
+          <input
+            className="appearance-none border box-border border-gray-200 hover:border-gray-300 focus:border-emerald-700 focus:ring-emerald-700 focus:ring-1 rounded w-full py-2 px-3 leading-tight focus:outline-none"
+            type="email"
+            name="email-address"
+            id="email-address"
+            onChange={this.onEmailChange}
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-sm font-semibold leading-5 mb-2" htmlFor="password">
+            Password
+          </label>
+          <input
+            className="appearance-none border box-border border-gray-200 hover:border-gray-300 focus:border-emerald-700 focus:ring-emerald-700 focus:ring-1 rounded w-full py-2 px-3 leading-tight focus:outline-none"
+            type="password"
+            name="password"
+            id="password"
+            onChange={this.onPasswordChange}
+          />
+        </div>
+        <div className="mb-8">
+          <button
+            onClick={this.onSubmitSignIn}
+            className="w-full hover:bg-green-950  bg-emerald-700 text-white text-sm font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="button"
+          >
+            Register
+          </button>
+        </div>
+      </form>
+    </div>
+              
+      
     );
   }
 }
