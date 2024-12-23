@@ -11,8 +11,11 @@ const Header = ({ onRouteChange, isSignedIn, name }) => {
               <nav className="flex justify-end items-center pr-8 space-x-1.5">
                   {isSignedIn ? (
                       <>
-                         <div className="text-sm mr-4">{`Logged in as ${name}`}</div>
-                         <div className="cursor-pointer px-5 py-2.5 hover:text-blue-600" 
+                         <div className="text-sm font-medium mr-4">
+                            {`Logged in as `}
+                            <span className="font-semibold">{name}</span>
+                         </div>
+                         <div className="cursor-pointer text-emerald-950 text-sm font-semibold border-2 rounded px-5 py-2.5 hover:bg-stone-200" 
                             onClick={() => onRouteChange('signout')}>Sign Out
                          </div>
                       </>

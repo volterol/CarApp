@@ -1,13 +1,9 @@
 .bounding-box {
     position: absolute;
-    box-shadow: 0 0 0 3px #f22314 inset;
+    border: 3px solid #f22314;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     cursor: pointer;
-    margin: -8px;
-}
-
-.num-rec {
-    flex-direction: column;
+    margin: -8px
 }

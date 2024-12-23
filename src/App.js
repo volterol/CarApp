@@ -151,7 +151,7 @@ class App extends Component {
   render() {
     const { isSignedIn, imageUrl, route, box, num, isNumLoaded } = this.state;
     return (
-      <div className="max-w-[1024px] mx-auto px-4 font-sans">
+      <div className="max-w-[1024px] flex flex-col justify-center mx-auto px-4 font-sans">
         <Header 
         isSignedIn={isSignedIn} 
         onRouteChange={this.onRouteChange} 
@@ -164,8 +164,8 @@ class App extends Component {
                 onInputChange={this.onInputChange}
                 onButtonSubmit={this.onButtonSubmit}
               />
-              <NumRecognition box={box} imageUrl={imageUrl} />
               <Rank name={this.state.user.name} num={num} isNumLoaded={isNumLoaded} />
+              <NumRecognition box={box} imageUrl={imageUrl} />
             </div>
           : (
              route === 'signin'

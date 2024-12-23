@@ -48,7 +48,7 @@ app.use(cors({
 }));
 
 app.use((req, res, next) => {
-  const allowedOrigins = ['https://carpp.online', 'http://localhost:3001'];
+  const allowedOrigins = ['https://carpp.online', 'http://localhost:3001']; // 2 origins so cors can work with both the production and dev server
   const origin = req.headers.origin;
 
   if (allowedOrigins.includes(origin)) {
