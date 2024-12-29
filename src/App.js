@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Header from './components/Header/Header';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
-import Sidebar from './components/Sidebar/Sidebar';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import NumRecognition from './components/NumRecognition/NumRecognition';
@@ -157,7 +156,6 @@ class App extends Component {
         onRouteChange={this.onRouteChange} 
         name={this.state.user.name} 
         />
-        <Sidebar />
         { route === 'home'
           ? <div>
               <ImageLinkForm

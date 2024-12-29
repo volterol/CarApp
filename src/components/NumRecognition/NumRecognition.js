@@ -3,7 +3,7 @@ import './NumRecognition.css';
 
 const NumRecognition = ({ imageUrl, box }) => {
   return (
-    <div className='max-w-4xl flex justify-center mt-8'>
+    <div className='max-w-4xl mx-auto mt-8 pb-4'>
       <div style={{position: "relative", display: "flex", justifyContent: "center" }}>
         <img
           id='inputimage'
