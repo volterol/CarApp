@@ -38,7 +38,7 @@ const handleApiCall = (req, res) => {
       };
     
     const fetchPersonVehicleDetection = () => {
-        return fetch("https://api.clarifai.com/v2/models/person-detection-efficientdet-lite/versions/b71b4b4e28214100906f2ad6933e1726/outputs", returnClarifaiRequestOptions())
+        return fetch("https://api.clarifai.com/v2/models/people-vehicle-detection-efficientdet/versions/5ef2d2ef42294efea6e71dc4134d1728/outputs", returnClarifaiRequestOptions())
             .then(response => {
                 console.log("response from person vehicle det model: ", response);
                 if (!response.ok) {
