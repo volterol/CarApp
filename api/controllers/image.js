@@ -1,6 +1,7 @@
 require('dotenv').config();
 
-const handleApiCall = (req, res) => {
+
+const handleApiCall = (req, res) => { 
     const returnClarifaiRequestOptions = () => {
         const PAT = process.env.myPAT;
         const USER_ID = process.env.myUSER_ID;       
@@ -23,7 +24,7 @@ const handleApiCall = (req, res) => {
           ]
         });
       
-        const requestOptions = {
+        const requestOptions = { //
           method: 'POST',
           headers: {
               'Accept': 'application/json',
@@ -37,7 +38,7 @@ const handleApiCall = (req, res) => {
        
       };
     
-    const fetchPersonVehicleDetection = () => {
+    const fetchPersonVehicleDetection = () => { // 
         return fetch("https://api.clarifai.com/v2/models/people-vehicle-detection-efficientdet/versions/5ef2d2ef42294efea6e71dc4134d1728/outputs", returnClarifaiRequestOptions())
             .then(response => {
                 console.log("response from person vehicle det model: ", response);

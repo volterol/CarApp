@@ -2,7 +2,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 
-const INTERVAL = 20 * 60 * 1000; // 20 minutes in milliseconds
+const INTERVAL = 15 * 60 * 1000; // 20 minutes in milliseconds
 const personVehicleModelUrl = "https://api.clarifai.com/v2/models/person-detection-efficientdet-lite/versions/b71b4b4e28214100906f2ad6933e1726/outputs";
 const ocrSceneEnglishModelUrl = "https://api.clarifai.com/v2/models/ocr-scene-english-paddleocr/versions/40dbb2c9cde44a27af226782e7157006/outputs";
 const LOG_FILE = path.join(__dirname, 'ping_logs.txt');
