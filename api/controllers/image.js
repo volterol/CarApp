@@ -98,6 +98,7 @@ const handleApiCall = (req, res) => {
 
 const handleImage = (req, res, db) => {
     const { id } = req.body;
+    console.log(req.body);
     db('users')
         .where('id', '=', id)
         .increment('entries', 1)

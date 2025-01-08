@@ -4,7 +4,8 @@ import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
-import NumRecognition from './components/NumRecognition/NumRecognition';
+//import NumRecognition from './components/NumRecognition/NumRecognition';
+import VehicleNumRecognition from './components/VehicleNumRecognition/VehicleNumRecognition';
 
 
 
@@ -12,16 +13,19 @@ const initialState = {
   input: '',
   imageUrl: '',
   box: [],
+  blueBox: [],
   route: 'signin',
   isSignedIn: false,
   user: {
     id: '',
     name: '',
     email: '',
-    joined: ''
+    joined: '',
+    entries: 0
   },
   isNumLoaded: false,
   num: '',
+  rejectedNums: [],
 }
 
 class App extends Component {
@@ -51,24 +55,35 @@ class App extends Component {
         }
         return response.json();
       })
-      .then(data => {
-        const numLocations = this.filterNums(data).filtered_arr.map((i) => data.ocrSceneEnglish.outputs[0].data.regions[i].region_info.bounding_box);
-        const numLocationLines = numLocations.map(location => this.calculateBorders(location));
-        this.displayBox(numLocationLines);
-        this.loadNum(this.outputNumPlate(data));
-        })
-      .catch(error => {
+      .then((data) => {
+        const numLocations = this.filterNums(data).filtered_arr.map((i) =>
+          data.ocrSceneEnglish.outputs[0].data.regions[i].region_info.bounding_box
+        );
+        const numLocationLines = numLocations.map((location) => this.calculateBorders(location));
+        const vehicleData = this.filterVehicles(data).map((i) =>
+          data.personVehicleDetection.outputs[0].data.regions[i].region_info.bounding_box
+        );
+        const vehicleLocationLines = vehicleData.map((location) => this.calculateBorders(location));
+  
+        // Filter boxes and plates based on blueBox
+        this.displayBox(numLocationLines, vehicleLocationLines);
+        const { filteredPlates, rejectedPlates } = this.outputNumPlate(data, vehicleLocationLines);
+  
+        this.loadNum(filteredPlates, rejectedPlates);
+      })
+      .catch((error) => {
         console.log('error', error);
         alert('Error processing the image. Please try again.');
       });
-  }
+  };
   
   loadUser = (data) => {
     this.setState({user: {
       id: data.id,
       name: data.name,
       email: data.email,
-      joined: data.joined
+      joined: data.joined,
+      entries: data.entries
     }})
   }
 
@@ -83,11 +98,24 @@ class App extends Component {
       rightCol: width - (clarifai.right_col * width),
       bottomRow: height - (clarifai.bottom_row * height)
     }
-  }
+  };
 
-  displayBox = (box) => {
-    this.setState({box: box});
-  }
+  isBoxWithinBlueBox = (box, blueBox) => {
+    return (
+      box.leftCol >= blueBox.leftCol &&
+      box.rightCol <= blueBox.rightCol &&
+      box.topRow >= blueBox.topRow &&
+      box.bottomRow <= blueBox.bottomRow
+    );
+  };
+
+  displayBox = (boxes, blueBoxes) => {
+    // Filter each box to see if it's within any blueBox
+    const filteredBoxes = boxes.filter((box) =>
+      blueBoxes.some((blueBox) => this.isBoxWithinBlueBox(box, blueBox))
+    );
+    this.setState({ box: filteredBoxes });
+  };
 
   filterNums = (data) => {
     console.log(data);
@@ -110,33 +138,62 @@ class App extends Component {
         x++;
     });
     return { filtered_arr, strings_arr }
-  }
+  };
 
-  outputNumPlate = (data) => {
-    const arr1 = this.filterNums(data).filtered_arr;
-    const plateNumbers = [];
-
-    // Loop through each filtered region
-    arr1.forEach(i => {
-        let numPlate = data.ocrSceneEnglish.outputs[0].data.regions[i].data.text.raw;
-        
-        // Remove spaces within a recognized plate number
-        numPlate = numPlate.replace(/\s+/g, '');
-
-        // Add the cleaned plate number to the array
-        plateNumbers.push(numPlate);
+  filterVehicles = (data) => {
+    let x = 0;
+    let filtered_arr = [];
+    Object.values(data.personVehicleDetection.outputs[0].data.regions).forEach((i) => {
+      let confirmVehicle = i.data.concepts[0]?.name;
+      if (confirmVehicle === 'vehicle') {
+        filtered_arr.push(x);
+      }
+      x++;
     });
+    return filtered_arr;
+  };
 
-    return plateNumbers;
-  }
+  outputNumPlate = (data, blueBoxes) => {
+    const numData = this.filterNums(data); // Get filtered indices and strings
+    const arr1 = numData.filtered_arr; // Indices of valid plates
+    const filteredPlates = []; // Plates within blueBoxes
+    const rejectedPlates = []; // Plates outside blueBoxes
+  
+    arr1.forEach((i) => {
+      const boundingBox = data.ocrSceneEnglish.outputs[0].data.regions[i].region_info.bounding_box;
+      const plateBoundingBox = this.calculateBorders(boundingBox);
+  
+      // Check if the plate's bounding box is inside any blueBox
+      const isInsideBlueBox = blueBoxes.some((blueBox) =>
+        this.isBoxWithinBlueBox(plateBoundingBox, blueBox)
+      );
+  
+      let numPlate = data.ocrSceneEnglish.outputs[0].data.regions[i].data.text.raw;
+  
+      // Remove spaces from the recognized plate number
+      numPlate = numPlate.replace(/\s+/g, '');
+  
+      if (isInsideBlueBox) {
+        filteredPlates.push(numPlate); // Add to filtered plates
+      } else {
+        rejectedPlates.push(numPlate); // Add to rejected plates
+      }
+    });
+  
+    return { filteredPlates, rejectedPlates };
+  };
+  
 
-  loadNum = (num) => {
-    this.setState({num: num});
-  }
+  loadNum = (filteredPlates, rejectedPlates) => {
+    this.setState({
+      num: filteredPlates,         // Set filtered plates
+      rejectedNums: rejectedPlates // Set rejected plates
+    });
+  };
 
   onInputChange = (event) => {
     this.setState({input: event.target.value});
-  }
+  };
 
   onRouteChange = (route) => {
     if (route === 'signout') {
@@ -145,16 +202,17 @@ class App extends Component {
       this.setState({isSignedIn: true})
     }
     this.setState({route: route});
-  }
+  };
 
   render() {
-    const { isSignedIn, imageUrl, route, box, num, isNumLoaded } = this.state;
+    const { isSignedIn, imageUrl, route, box, num, rejectedNums, isNumLoaded } = this.state;
     return (
       <div className="max-w-[1024px] flex flex-col justify-center mx-auto px-4 font-sans">
         <Header 
         isSignedIn={isSignedIn} 
         onRouteChange={this.onRouteChange} 
         name={this.state.user.name} 
+        entries={this.state.user.entries}
         />
         { route === 'home'
           ? <div>
@@ -162,8 +220,14 @@ class App extends Component {
                 onInputChange={this.onInputChange}
                 onButtonSubmit={this.onButtonSubmit}
               />
-              <Rank name={this.state.user.name} num={num} isNumLoaded={isNumLoaded} />
-              <NumRecognition box={box} imageUrl={imageUrl} />
+              <Rank 
+                name={this.state.user.name} 
+                num={num} 
+                isNumLoaded={isNumLoaded}
+                rejectedNums={rejectedNums}
+              />
+              {/* <NumRecognition box={box} imageUrl={imageUrl} /> */}
+              <VehicleNumRecognition box={box} imageUrl={imageUrl} />
             </div>
           : (
              route === 'signin'
@@ -173,7 +237,7 @@ class App extends Component {
         }
       </div>
     );
-  }
-}
+  };
+};
 
 export default App;

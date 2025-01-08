@@ -1,7 +1,7 @@
 import React from 'react';
-import './NumRecognition.css';
+import './VehicleNumRecognition.css';
 
-const NumRecognition = ({ imageUrl, box }) => {
+const VehicleNumRecognition = ({ imageUrl, box }) => {
   return (
     <div className='max-w-4xl mx-auto mt-8 pb-4'>
       <div style={{position: "relative", display: "flex", justifyContent: "center" }}>
@@ -16,7 +16,7 @@ const NumRecognition = ({ imageUrl, box }) => {
             const { topRow, rightCol, bottomRow, leftCol } = location;
             return (<div 
               key={i} 
-              className='bounding-box' 
+              className='bounding-box-red' 
               style={{top: topRow, right: rightCol, bottom: bottomRow, left: leftCol, boxSizing: 'border-box'}}>
             </div>);
           })
@@ -26,4 +26,4 @@ const NumRecognition = ({ imageUrl, box }) => {
   );
 }
 
-export default NumRecognition;
+export default VehicleNumRecognition;

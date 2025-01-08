@@ -1,6 +1,6 @@
 import React from "react";
 
-const Header = ({ onRouteChange, isSignedIn, name }) => {
+const Header = ({ onRouteChange, isSignedIn, name, entries }) => {
   return (
       <header className="max-w-4xl mx-auto flex justify-between items-center w-full font-sans text-lg pt-4">
           <div className="flex-grow flex justify-start items-center font-semibold text-4xl text-emerald-950 leading-snug tracking-tighter">
@@ -13,7 +13,7 @@ const Header = ({ onRouteChange, isSignedIn, name }) => {
                       <>
                          <div className="text-sm font-medium mr-4">
                             {`Logged in as `}
-                            <span className="font-semibold">{name}</span>
+                            <span className="font-semibold">{name + ' ' + entries}</span>
                          </div>
                          <div className="cursor-pointer text-emerald-950 text-sm font-semibold border-2 rounded px-5 py-2.5 hover:bg-stone-200" 
                             onClick={() => onRouteChange('signout')}>Sign Out
@@ -39,4 +39,4 @@ const Header = ({ onRouteChange, isSignedIn, name }) => {
   )
 }
 
-export default Header
+export default Header;

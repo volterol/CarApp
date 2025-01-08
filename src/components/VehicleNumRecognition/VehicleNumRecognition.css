@@ -1,0 +1,20 @@
+.bounding-box-blue {
+    position: absolute;
+    border: 3px solid #0f44d6;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    cursor: pointer;
+    margin: -8px
+}
+
+.bounding-box-red {
+    position: absolute;
+    border: 3px solid #f22314;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    cursor: pointer;
+    margin: -8px
+}
+
