@@ -1,9 +1,0 @@
-.bounding-box {
-    position: absolute;
-    border: 3px solid #f22314;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    cursor: pointer;
-    margin: -8px
-}

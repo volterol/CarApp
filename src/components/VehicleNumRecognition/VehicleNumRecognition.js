@@ -1,7 +1,7 @@
 import React from 'react';
 import './VehicleNumRecognition.css';
 
-const VehicleNumRecognition = ({ imageUrl, box }) => {
+const VehicleNumRecognition = ({ imageUrl, box, name, entries }) => {
   return (
     <div className='max-w-4xl mx-auto mt-8 pb-4'>
       <div style={{position: "relative", display: "flex", justifyContent: "center" }}>
@@ -21,6 +21,13 @@ const VehicleNumRecognition = ({ imageUrl, box }) => {
             </div>);
           })
         }
+      </div>
+      <div className="text-center mt-4 text-m">
+        {`User `}
+        <span className="font-semibold">{name}</span>
+        {` has succesfully processed `}  
+        <span className="font-semibold">{entries}</span>
+        {` images in total.`}
       </div>
     </div>
   );

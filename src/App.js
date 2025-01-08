@@ -67,9 +67,10 @@ class App extends Component {
   
         // Filter boxes and plates based on blueBox
         this.displayBox(numLocationLines, vehicleLocationLines);
-        const { filteredPlates, rejectedPlates } = this.outputNumPlate(data, vehicleLocationLines);
+        const { filteredPlates, rejectedPlates } = this.outputNumPlate(data, vehicleLocationLines); 
   
-        this.loadNum(filteredPlates, rejectedPlates);
+        this.loadNum(filteredPlates, rejectedPlates); 
+        this.updateImageEntries(); //triggers hadleImage in server.js
       })
       .catch((error) => {
         console.log('error', error);
@@ -204,6 +205,30 @@ class App extends Component {
     this.setState({route: route});
   };
 
+  updateImageEntries = () => {
+    const { user } = this.state;
+  
+    fetch('https://carpp.online:3000/image', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: user.id }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to update image entries.');
+        }
+        return response.json();
+      })
+      .then((entries) => {
+        this.setState(Object.assign(this.state.user, { entries }));
+      })
+      .catch((error) => {
+        console.error('Error updating image entries:', error);
+      });
+  };  
+
   render() {
     const { isSignedIn, imageUrl, route, box, num, rejectedNums, isNumLoaded } = this.state;
     return (
@@ -226,8 +251,12 @@ class App extends Component {
                 isNumLoaded={isNumLoaded}
                 rejectedNums={rejectedNums}
               />
-              {/* <NumRecognition box={box} imageUrl={imageUrl} /> */}
-              <VehicleNumRecognition box={box} imageUrl={imageUrl} />
+              <VehicleNumRecognition 
+                box={box} 
+                imageUrl={imageUrl}
+                name={this.state.user.name} 
+                entries={this.state.user.entries}
+              />
             </div>
           : (
              route === 'signin'
