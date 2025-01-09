@@ -1,11 +1,15 @@
 import React from "react";
+import './Rank.css';
 
 const Rank = ({ num, isNumLoaded, rejectedNums }) => {
     return (
         <div className="text-center mt-8">
             {isNumLoaded ? (
                 num.length === 0 ? (
-                    <p className="text-xl">Loading...</p>
+                    <div className="loader-container">
+                        <div className="spinner"></div>
+                        <p className="text-xl mt-4">Loading...</p>
+                    </div>
                 ) : (
                     <div>
                         <p className="text-2xl font-bold mb-4">Detected Number Plates:</p>
@@ -15,7 +19,6 @@ const Rank = ({ num, isNumLoaded, rejectedNums }) => {
                             ))}
                         </ul>
 
-                        {/* show plates that did not pass through filter if any */}
                         {rejectedNums.length > 0 && (
                             <div className="mt-4">
                                 <p className="text-l font-bold mb-4">Possible Number Plates:</p>
@@ -33,6 +36,6 @@ const Rank = ({ num, isNumLoaded, rejectedNums }) => {
             )}
         </div>
     );
-}
+};
 
 export default Rank;

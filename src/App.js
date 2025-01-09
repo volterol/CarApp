@@ -4,7 +4,6 @@ import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
-//import NumRecognition from './components/NumRecognition/NumRecognition';
 import VehicleNumRecognition from './components/VehicleNumRecognition/VehicleNumRecognition';
 
 
