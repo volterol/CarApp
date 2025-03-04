@@ -38,7 +38,7 @@ const handleApiCall = (req, res) => {
        
       };
     
-    const fetchPersonVehicleDetection = () => { // 
+    const fetchPersonVehicleDetection = () => { 
         return fetch("https://api.clarifai.com/v2/models/people-vehicle-detection-efficientdet/versions/5ef2d2ef42294efea6e71dc4134d1728/outputs", returnClarifaiRequestOptions())
             .then(response => {
                 console.log("response from person vehicle det model: ", response);
@@ -86,7 +86,7 @@ const handleApiCall = (req, res) => {
     Promise.all([fetchPersonVehicleDetection(), fetchOCRSceneEnglish()])
         .then(results => {
             const [personVehicleData, ocrSceneData] = results;
-            res.json({
+            res.json({ 
                 personVehicleDetection: personVehicleData,
                 ocrSceneEnglish: ocrSceneData
             });
